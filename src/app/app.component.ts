@@ -1,13 +1,30 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AsidebarComponent } from './template/asidebar/asidebar.component';
+import { FooterComponent } from './template/footer/footer.component';
+import { NavbarComponent } from './template/navbar/navbar.component';
+import { AsidebarService } from './template/asidebar/asidebar.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule, AsidebarComponent, FooterComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
+  static:boolean = true
+  
+  constructor(public asidebarService:AsidebarService){
+
+  }
+
+  ngOnInit(): void {
+    this.asidebarService.static$.subscribe(data => {
+      this.static = data
+    })
+  }
+
   title = 'front';
 }
