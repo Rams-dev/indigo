@@ -1,0 +1,36 @@
+
+
+<form class="col-md-12" [formGroup]="form" autocomplete="off">   
+    <div class="row">
+    
+      <mat-form-field class="col-12 ">
+        <mat-label>Titulo</mat-label>
+        <input matInput formControlName="title" name="title" #title  [required]="!form.get('title')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+        <!-- {{form.errors?.['required'] | json}} -->
+      </mat-form-field>  
+
+
+     
+
+
+      <!-- <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="fechaIngresoLaboral">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+
+      
+
+
+      <div class="col-12 mt-2">  
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary m-1" (click)="save()" [disabled]="!form.valid">Guardar</button>
+
+        </div>
+
+        <!-- <button class="btn btn-success m-1" (click)="actualizar()" [disabled]="!form.valid">Actualizar</button> -->
+      </div>
