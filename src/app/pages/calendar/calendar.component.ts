@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
   MAT_DIALOG_DATA,
@@ -15,9 +15,10 @@ import { CalendarOptions } from '@fullcalendar/core/index.js';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import esLocale from '@fullcalendar/core/locales/es';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { ModalEventComponent } from './modal-event/modal-event.component';
 import bootstrapPlugin from '@fullcalendar/bootstrap5';
+import { EventService } from '../events/event.service';
 
 @Component({
   selector: 'app-calendar',
@@ -26,15 +27,14 @@ import bootstrapPlugin from '@fullcalendar/bootstrap5';
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
-export class CalendarComponent implements OnInit{
+export class CalendarComponent implements OnInit, AfterViewInit{
 
   calendarOptions: CalendarOptions 
-  readonly dialog = inject(MatDialog
-
-  );
+  readonly dialog = inject(MatDialog);
+  events:any=[]
 
   constructor(
-
+    private eventService:EventService
   ){
     this.calendarOptions = {
       locale: esLocale,
@@ -80,7 +80,28 @@ export class CalendarComponent implements OnInit{
   }
 
   ngOnInit(): void {
+
+    this.getEvents()
     
+  }
+
+  ngAfterViewInit(): void {   
+    
+    new Draggable(document.getElementById('mydraggable')!,  {
+      itemSelector: '.item-class'
+    });
+
+  }
+
+
+  getEvents(){
+    this.eventService.getAll().subscribe(data => {
+      this.events = data.data.filter((e:any) => e.dateStart == null)
+      console.log(data.data);
+      console.log(this.events);
+      
+      
+    })
   }
 
   eventClick(event:any){

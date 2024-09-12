@@ -6,6 +6,8 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
+import { AlertService } from '../../components/alert/alert.service';
 
 @Component({
   selector: 'app-users',
@@ -20,7 +22,7 @@ export class UsersComponent implements OnInit {
     'idUsuario',
     'nombre',
     'noTelefono',
-    // 'colorTorre',
+    'estatus',
     // 'chasis',
     // 'estatusLavado',
     'opciones' 
@@ -32,24 +34,16 @@ export class UsersComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort; 
 
   constructor(
-    private router:Router
-    // public api: HttpService,
-    // public ordenLavadoService: OrdenLavadoService, 
-    // private dialog: MatDialog,
-    // private toasterService: ToastBarService,
+    private router:Router,
+    private userService:UserService,
+    private snack:AlertService
   ) { 
     
     
   }
 
   ngOnInit(): void {
-    // this.ordenLavadoService.typeMessage$.subscribe(type => {
-    //   if(type == 'cambioEstatusOrden' || type == 'solicitudCambioEspacioLavado'){
-    //     this.listOrdenes()
-    //   }
-    // })
-
-    // this.listOrdenes()
+    this.get()
     
   }
 
@@ -70,56 +64,34 @@ export class UsersComponent implements OnInit {
     this.router.navigate(["/usuarios/nuevo"])
   }
 
-
-  // openModal(){
-  //   const dialogref = this.dialog.open(ModalOrdenFormComponent, { width: '85%', height: 'auto' })
-  //   .afterClosed().subscribe(data => {
-  //     if(data == 'creado'){
-  //       this.listOrdenes()
-  //     }
-  //   });
-  // }
-
-
-  // calificar(element:any){
-  //   const dialogref = this.dialog.open(ModalFormCalificacionComponent, { width: '50%', height: 'auto', data:element })
-  //   .afterClosed().subscribe(data => {
-  //     if(data == 'creado'){
-  //       this.listOrdenes()
-  //     }
-  //   });
-
-  // }
-
+  get(){
+    this.userService.getAll().subscribe(data => {
+      this.dataSource = new MatTableDataSource(data.data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      
+    })
+  }
 
   edit(element: any){
     console.log(element);
-    
-    // const dialogref = this.dialog.open(ModalOrdenFormComponent, { width: '85%', height: 'auto', data: element })
-    // .afterClosed().subscribe(data => {
-    //   if(data == 'editado'){
-    //     this.listOrdenes()
-    //   }
-    // });
+    this.router.navigate(["/usuarios/editar/"+element.idUsuario])
   }
 
 
-  // listOrdenes(){
-  //   this.ordenLavadoService.getOLs().subscribe(data => {
-  //     console.log(data);
-      
-  //     this.dataSource = new MatTableDataSource(data);
-  //     this.dataSource.paginator = this.paginator;
-  //     this.dataSource.sort = this.sort;
-  //   })
-  // }
+  activate(element:any){
+    this.userService.activarUsuario(element.idUsuario).subscribe(data => {
+      this.get()
+      this.snack.openSnackBar("Usuario activado")
+    })
+    
+  }
 
   delete(element: any){
-  //   // console.log(element.idRolLavado);
-  //   this.ordenLavadoService.delete(element.idOl).subscribe(data => {
-  //     this.toasterService.message("DATO ELIMINADO","cerrar","?")
-  //     this.listOrdenes()
-  //   })
+    this.userService.delete(element.idUsuario).subscribe(data => {
+      this.get()
+      this.snack.openSnackBar("Usuario desactivado")
+    })
   }
 
 

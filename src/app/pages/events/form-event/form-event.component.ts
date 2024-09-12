@@ -22,9 +22,11 @@ export class FormEventComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    
     this.form = new FormGroup({
       idTask: new FormControl(''),
       title: new FormControl('', Validators.required),
+      description: new FormControl(''),
       startDate : new FormControl(null),
       endDate : new FormControl(null)
     })

@@ -7,7 +7,10 @@ import { MatFormField, MatFormFieldModule, MatHint, MatLabel } from '@angular/ma
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
 import moment from 'moment'
+import { UserService } from '../user.service';
+import { AlertService } from '../../../components/alert/alert.service';
 
 
 @Component({
@@ -29,20 +32,31 @@ export class NewUserComponent implements OnInit{
 
 
   form: FormGroup;
+  idUser:String | null = null
+  user:any = []
 
   constructor(
+    private route:ActivatedRoute,
+    private userService:UserService,
+    public snack:AlertService,
   ) { }
 
   ngOnInit(): void {
+    this.idUser = this.route.snapshot.paramMap.get('idUser');
+
+    if (this.idUser){
+      this.getUser()
+    }
 
     this.form = new FormGroup({
       idUsuario: new FormControl(''),
       nombre: new FormControl('', Validators.required),
       apellidoPaterno : new FormControl('', Validators.required),
       apellidoMaterno : new FormControl('', Validators.required),
-      telefono : new FormControl('', Validators.required),
+      noTelefono : new FormControl('', Validators.required),
       fechaNacimiento : new FormControl('', Validators.required),
-      fechaIngresoLaboral : new FormControl('', Validators.required),
+      fechaDeIngresoLaboral : new FormControl('', Validators.required),
+      idRol : new FormControl('', Validators.required),
       password : new FormControl('', Validators.required),
     })
 
@@ -52,9 +66,20 @@ export class NewUserComponent implements OnInit{
 
   }
 
+  getUser(){
+    this.userService.getOne(Number(this.idUser)).subscribe(data => {
+      console.log(data.data);
+      
+      this.user = data.data
+      this.form.patchValue(data.data)
+
+    })
+  }
+
 
   guardar(){
     this.formatfechas()
+    this.snack.openSnackBar("Usuario agregado")
     console.log(this.form.value);
     
 
@@ -68,6 +93,12 @@ export class NewUserComponent implements OnInit{
 
   actualizar(){
     this.formatfechas()
+    console.log(this.form.value);
+    this.userService.put(this.form.value.idUsuario,this.form.value).subscribe(data => {
+      this.getUser()
+      this.snack.openSnackBar("Usuario Actualizado")
+    })
+    
     
   }
 }

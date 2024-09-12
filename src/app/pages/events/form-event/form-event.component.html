@@ -11,6 +11,15 @@
       </mat-form-field>  
 
 
+      <mat-form-field class="col-12 ">
+        <mat-label>Descripción</mat-label>
+        <input matInput formControlName="description" name="description" #description  [required]="!form.get('description')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+        <!-- {{form.errors?.['required'] | json}} -->
+      </mat-form-field>  
+
+
+
      
 
 

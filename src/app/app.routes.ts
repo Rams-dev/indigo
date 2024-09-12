@@ -7,5 +7,6 @@ export const routes: Routes = [
     { path: 'calendar', component: CalendarComponent },
     { path: 'usuarios', component: UsersComponent },
     { path: 'usuarios/nuevo', component: NewUserComponent },
+    { path: 'usuarios/editar/:idUser', component: NewUserComponent },
     { path: '**', component: UsersComponent }
 ];
