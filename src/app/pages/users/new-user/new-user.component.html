@@ -1,0 +1,72 @@
+<form class="col-md-12" [formGroup]="form" autocomplete="off">   
+    <div class="row">
+    
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Nombre: </mat-label>
+        <input matInput formControlName="nombre" name="nombre" #nombre  [required]="!form.get('nombre')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+        <!-- {{form.errors?.['required'] | json}} -->
+      </mat-form-field>  
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Apellido paterno</mat-label>
+        <input matInput formControlName="apellidoPaterno" name="apellidoPaterno" #apellidoPaterno [required]="!form.get('apellidoPaterno')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Apellido materno</mat-label>
+        <input matInput formControlName="apellidoMaterno" name="apellidoMaterno" #apellidoMaterno [required]="!form.get('apellidoMaterno')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="telefono" name="telefono" #telefono [required]="!form.get('telefono')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+      </mat-form-field>
+
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Fecha nacimiento</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Fecha de ingreso</mat-label>
+        <input matInput [matDatepicker]="ingreso" formControlName="fechaIngresoLaboral">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="ingreso">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #ingreso></mat-datepicker>
+      </mat-form-field>
+
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="fechaIngresoLaboral">
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 col-sm-4 col-md-4 col-xl-3">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" name="password" #password [required]="!form.get('password')?.value">
+        <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
+      </mat-form-field>
+
+      <div class="col-12 mt-2">  
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary m-1" (click)="guardar()" [disabled]="!form.valid">Guardar</button>
+
+        </div>
+
+        <!-- <button class="btn btn-success m-1" (click)="actualizar()" [disabled]="!form.valid">Actualizar</button> -->
+      </div>
