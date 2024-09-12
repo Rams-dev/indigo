@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsidebarComponent } from './template/asidebar/asidebar.component';
 import { FooterComponent } from './template/footer/footer.component';
 import { NavbarComponent } from './template/navbar/navbar.component';
@@ -9,12 +9,13 @@ import { AsidebarService } from './template/asidebar/asidebar.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, AsidebarComponent, FooterComponent, NavbarComponent],
+  imports: [RouterOutlet, CommonModule, AsidebarComponent, FooterComponent, NavbarComponent, RouterLink, RouterLinkActive],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
   static:boolean = true
+  
   
   constructor(public asidebarService:AsidebarService){
 
@@ -25,6 +26,11 @@ export class AppComponent implements OnInit{
       this.static = data
     })
   }
+
+
+
+
+  
 
   title = 'front';
 }

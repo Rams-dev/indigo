@@ -3,7 +3,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
             <a href="index.html" class="logo">
-                <img src="assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+                <img src="assets/imagenes/LOGOI.png" alt="navbar brand" class="navbar-brand" height="40" />
             </a>
             <div class="nav-toggle" (click)="toggleBottonSideBar()">
                 <button class="btn btn-toggle toggle-sidebar">
@@ -19,16 +19,17 @@
         </div>
         <!-- End Logo Header -->
     </div>
-    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-wrapper scrollbar scrollbar-inner" (mouseenter)="addClass()" 
+    (mouseleave)="removeClass()">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
-                <li class="nav-item active">
-                    <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
+                <!-- <li class="nav-item active"> -->
+                    <!-- <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
                         <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="dashboard">
+                    </a> -->
+                    <!-- <div class="collapse" id="dashboard">
                         <ul class="nav nav-collapse">
                             <li>
                                 <a href="../demo1/index.html">
@@ -36,15 +37,15 @@
                                 </a>
                             </li>
                         </ul>
-                    </div>
-                </li>
-                <li class="nav-section">
+                    </div> -->
+                <!-- </li> -->
+                <!-- <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
                     <h4 class="text-section">Components</h4>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#base">
                         <i class="fas fa-layer-group"></i>
                         <p>Base</p>
@@ -199,22 +200,24 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
+                
                 <li class="nav-item">
-                    <a href="widgets.html">
-                        <i class="fas fa-desktop"></i>
-                        <p>Widgets</p>
-                        <span class="badge badge-success">4</span>
+                    <a routerLink="/calendar">
+                        <i class="far fa-calendar"></i>
+                        <p>Calendario</p>
+                        <!-- <span class="badge badge-secondary">1</span> -->
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="../../documentation/index.html">
-                        <i class="fas fa-file"></i>
-                        <p>Documentation</p>
-                        <span class="badge badge-secondary">1</span>
+
+                <li class="nav-item active">
+                    <a routerLink="/usuarios">
+                        <i class="fas fa-users"></i>
+                        <p>Usuarios</p>
+                        <!-- <span class="badge badge-success">4</span> -->
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#submenu">
                         <i class="fas fa-bars"></i>
                         <p>Menu Levels</p>
@@ -264,7 +267,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>

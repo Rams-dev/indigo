@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AsidebarService {
 
   static$ = new BehaviorSubject<boolean>(true)
+  asidebarIsHovered = false;
   static:boolean = true
 
   constructor() { 
