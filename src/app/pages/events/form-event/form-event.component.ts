@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { EventService } from '../event.service';
 
 @Component({
   selector: 'app-form-event',
@@ -13,30 +14,8 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './form-event.component.html',
   styleUrl: './form-event.component.css'
 })
-export class FormEventComponent implements OnInit{
+export class FormEventComponent {
 
-  form:FormGroup
 
-  constructor(){
 
-  }
-
-  ngOnInit(): void {
-    
-    this.form = new FormGroup({
-      idTask: new FormControl(''),
-      title: new FormControl('', Validators.required),
-      description: new FormControl(''),
-      startDate : new FormControl(null),
-      endDate : new FormControl(null)
-    })
-  
-    this.form.markAllAsTouched(); 
-  }
-
-  
-  save(){
-    console.log(this.form.value);
-    
-  }
 }

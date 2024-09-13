@@ -19,6 +19,8 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { ModalEventComponent } from './modal-event/modal-event.component';
 import bootstrapPlugin from '@fullcalendar/bootstrap5';
 import { EventService } from '../events/event.service';
+import { map } from 'rxjs';
+import moment from 'moment';
 
 @Component({
   selector: 'app-calendar',
@@ -31,6 +33,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   calendarOptions: CalendarOptions 
   readonly dialog = inject(MatDialog);
+  eventsCalendar:any=[]
   events:any=[]
 
   constructor(
@@ -38,7 +41,9 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   ){
     this.calendarOptions = {
       locale: esLocale,
-      initialView: 'dayGridMonth',
+      // initialView: 'dayGridMonth',
+      initialView: 'timeGridDay',
+      
       dropAccept: ".item-class",
       // allDaySlot: false,
       plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, bootstrapPlugin],
@@ -47,6 +52,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        // right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       // scrollTime: this.horaActual,
       nowIndicator:true,
@@ -64,17 +70,11 @@ export class CalendarComponent implements OnInit, AfterViewInit{
         
         return
       },
-      // eventReceive:(info) => this.eventReceive(info),
+      eventReceive:(info) => this.eventReceive(info),
       eventClick:(info) => this.eventClick(info),
       dateClick:(info) => this.dateClick(info),
-      eventDrop:(info) => {
-        console.log(info);
-        
-      },
-      eventResize:(info) => {
-        console.log(info);
-        
-      },
+      eventDrop:(info) => this.eventDrop(info),
+      eventResize:(info) => this.eventResize(info),
 
     }
   }
@@ -82,7 +82,19 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
 
     this.getEvents()
+    this.crearHorario()
+
     
+    
+  }
+
+
+  crearHorario(){
+    console.log(this.eventsCalendar);
+    
+    // this.calendarOptions.events = this.eventsCalendar
+    // this.calendarOptions.
+
   }
 
   ngAfterViewInit(): void {   
@@ -94,10 +106,36 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
 
+
+
+
   getEvents(){
-    this.eventService.getAll().subscribe(data => {
-      this.events = data.data.filter((e:any) => e.dateStart == null)
-      console.log(data.data);
+    this.eventService.getAll().pipe(
+      map((resp:any) => {
+
+        return resp.data.map((res:any) => {
+
+          let allDay = moment(res.dateStart).format("HH:MM:SS").startsWith("00:")
+          
+          
+          return {
+            "idEvent":res.idEvent,
+            "title":res.title,
+            "start":res.dateStart,
+            "end":res.dateEnd,
+            "allDay": allDay,
+            "extendedProps": res
+          }
+
+        })
+      })
+    ).
+    subscribe(data => {
+      
+      console.log(data);
+      this.eventsCalendar = data
+      this.calendarOptions.events = data
+      this.events = data.filter((e:any) => e.start == null)
       console.log(this.events);
       
       
@@ -106,15 +144,85 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   eventClick(event:any){
     console.log(event);
+    this.update(event.event.extendedProps)
     
 
   }
 
-  dateClick(event:any){
-    console.log(event);
-    const dialogRef = this.dialog.open(ModalEventComponent, {height:'auto', width:'50%', data:event});
+  update(event:any){
+    // console.log(event.event.start);
+    // console.log(event.event.end);
+    
+    // let data = event.event.extendedProps
+    // // data.dateStart = moment(event.event.start).format("YYYY-MM-DD")
+    // console.log(data)
+    this.eventService.put(event.idEvent, event).subscribe(data => {
+
+    })
+  }
+
+
+  eventReceive(event:any){
+    let data = {...event.event.extendedProps}
+    
+    if(event.event.end){
+      data.dateEnd = this.parseFecha(event.event.end)
+    }
+    data.dateStart =this.parseFecha(event.event.start)
+    console.log(data);
+
+    this.update(data)
+    
     
 
+  }
+
+  parseFecha(date:any){
+    return moment(date).format()
+
+  }
+
+
+  eventResize(event:any){
+
+    
+    let data = {...event.event.extendedProps}
+    console.log(this.parseFecha(event.event.end));
+    
+    data.dateEnd = this.parseFecha(event.event.end)
+    data.dateStart =this.parseFecha(event.event.start)
+    
+    this.update(data)
+
+  }
+
+  eventDrop(event:any){
+
+    let data = {...event.event.extendedProps}
+    console.log(this.parseFecha(event.event.end));
+    
+    data.dateEnd = this.parseFecha(event.event.end)
+    data.dateStart =this.parseFecha(event.event.start)
+    
+    this.update(data)
+    
+  }
+
+  dateClick(event:any){
+    console.log(event);
+    this.openModal(event)
+    
+    
+
+  }
+
+  openModal(data:any){
+    const dialogRef = this.dialog.open(ModalEventComponent, {height:'auto', width:'50%', data:data})
+    .afterClosed().subscribe(data => {
+      if(data == 'creado'){
+        this.getEvents()
+      }
+    });
   }
 
 }
