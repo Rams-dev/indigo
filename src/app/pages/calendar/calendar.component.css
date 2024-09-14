@@ -1,1 +1,6 @@
 /* import "@fullcalendar/bootstrap/main.css";   */
+
+
+.ec-event {
+    cursor: pointer;
+}

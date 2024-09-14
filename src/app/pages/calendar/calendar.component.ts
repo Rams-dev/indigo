@@ -143,8 +143,10 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
   eventClick(event:any){
-    console.log(event);
-    this.update(event.event.extendedProps)
+
+    this.openModal(event.event.extendedProps, true)
+    
+    // this.update(event.event.extendedProps)
     
 
   }
@@ -216,8 +218,8 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   }
 
-  openModal(data:any){
-    const dialogRef = this.dialog.open(ModalEventComponent, {height:'auto', width:'50%', data:data})
+  openModal(data:any, mostrarinfo = false){
+    const dialogRef = this.dialog.open(ModalEventComponent, {height:'auto', width:'50%', data:{data, mostrarinfo}, })
     .afterClosed().subscribe(data => {
       if(data == 'creado'){
         this.getEvents()

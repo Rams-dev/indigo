@@ -20,6 +20,8 @@ export class ModalEventComponent{
 
   readonly dialogRef = inject(MatDialogRef<ModalEventComponent>);
   data = inject<any>(MAT_DIALOG_DATA);
+  mostrarInfo:boolean = false
+  info:any 
 
   form:FormGroup
 
@@ -35,6 +37,16 @@ export class ModalEventComponent{
   }
 
   ngOnInit(): void {
+    console.log(this.data);
+    
+
+    if(this.data.mostrarinfo){
+      this.mostrarInfo = true
+      this.info = this.data.data
+
+    }
+
+    
     
     this.form = new FormGroup({
       idEvent: new FormControl(''),
@@ -45,8 +57,8 @@ export class ModalEventComponent{
     })
   
     this.form.markAllAsTouched(); 
-    this.form.patchValue(this.data)
-    this.form.patchValue({dateStart: this.data.dateStr})
+    this.form.patchValue(this.data.data)
+    this.form.patchValue({dateStart: this.data.data.dateStr})
 
     
   }

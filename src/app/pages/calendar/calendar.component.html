@@ -2,12 +2,12 @@
     <div class="row">
 
         <div class="col-12 col-md-3 col-sm-4 mt-5">
-            <div class="card border col-12 col-sm-12 col-md-12 mx-auto p-1 h-75 overflow-y-auto">
+            <div class="card border col-12 col-sm-12 col-md-12 mx-auto p-1 h-75">
                 <h4>Eventos</h4> 
                 <div class="d-flex justify-content-end" (click)="openModal({})">
                     <button class="btn btn-sm btn-primary"><i class="fas fa-plus ms-2"></i></button>
                 </div>
-                <ul class="list-group px-1 " id="mydraggable">    
+                <ul class="list-group px-1 overflow-y-auto " id="mydraggable" >    
                     @for(event of events; track event.idEvent){
 
                         <li class="list-group-item my-1 ec-event item-class ec-draggable"  [attr.data-event]="event | json">
