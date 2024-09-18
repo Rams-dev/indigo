@@ -1,6 +1,9 @@
-/* import "@fullcalendar/bootstrap/main.css";   */
-
 
 .ec-event {
     cursor: pointer;
+}
+
+.item-class{
+    background: rgba(42, 52, 196, 0.733);
+    color: #FFF;
 }

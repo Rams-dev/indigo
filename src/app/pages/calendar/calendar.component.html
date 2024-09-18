@@ -8,9 +8,9 @@
                     <button class="btn btn-sm btn-primary"><i class="fas fa-plus ms-2"></i></button>
                 </div>
                 <ul class="list-group px-1 overflow-y-auto " id="mydraggable" >    
-                    @for(event of events; track event.idEvent){
+                    @for(event of eventsWithOutDate; track event.idEvent){
 
-                        <li class="list-group-item my-1 ec-event item-class ec-draggable"  [attr.data-event]="event | json">
+                        <li class="list-group-item my-1 ec-event item-class ec-draggable"  [attr.data-event]="event | json" >
                             <div class="ec-event-body">
                                 <!-- <small class="text-white">{{orden.title}}</small> -->
                                 {{event.title}}

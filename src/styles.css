@@ -2,6 +2,10 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 
+.fc-timegrid-event-harness .fc-timegrid-event-harness-inset{
+  inset: 0px 0% -21px 25%!important;
+}
+
 .gg-check {
     box-sizing: border-box;
     position: relative;

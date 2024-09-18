@@ -1,10 +1,14 @@
 @if(mostrarInfo){
-        <h2 mat-dialog-title>{{info.title | uppercase}}</h2>
-        
-        <mat-dialog-content class="mat-typography p-3">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" >Actualizar</button>
+              
+        <mat-dialog-content class="mat-typography p-3 position-relative">
+            <div class="position-absolute top-10 end-80">
+                <button class="btn btn-primary" (click)="mostrarInfo = false" >Actualizar</button>
             </div>
+            <div class="mt-5">
+                <h4>{{info.title | uppercase}}</h4>
+
+            </div>
+            <hr>
             <div class="col-12 p-3">
                 <div>
                     <span>{{info.description}}</span>
@@ -15,7 +19,7 @@
 
 }@else {
 
-<h2 mat-dialog-title>Nueva tarea</h2>
+<h2 mat-dialog-title>{{form.get('idEvent')?.value ? 'Nueva tarea': 'Editar tarea' }} </h2>
 <mat-dialog-content>
     
 
@@ -39,11 +43,11 @@
 
       <div class="col-12 mt-2">  
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary m-1" (click)="save()" [disabled]="!form.valid">Guardar</button>
+            <button class="btn btn-primary m-1" (click)="save()" *ngIf="!form.get('idEvent')?.value" [disabled]="!form.valid">Guardar</button>
+            <button class="btn btn-success m-1" (click)="actualizar()" *ngIf="form.get('idEvent')?.value" [disabled]="!form.valid">Actualizar</button>
 
         </div>
 
-        <!-- <button class="btn btn-success m-1" (click)="actualizar()" [disabled]="!form.valid">Actualizar</button> -->
       </div>
     </div>
 </form>

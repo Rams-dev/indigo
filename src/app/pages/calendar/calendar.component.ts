@@ -20,12 +20,13 @@ import { ModalEventComponent } from './modal-event/modal-event.component';
 import bootstrapPlugin from '@fullcalendar/bootstrap5';
 import { EventService } from '../events/event.service';
 import { map } from 'rxjs';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import moment from 'moment';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [FullCalendarModule, CommonModule],
+  imports: [FullCalendarModule, CommonModule, DragDropModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
@@ -35,15 +36,17 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   readonly dialog = inject(MatDialog);
   eventsCalendar:any=[]
   events:any=[]
+  eventsWithOutDate:any = []
+
+  dateStart:any
+  dateEnd:any
 
   constructor(
     private eventService:EventService
   ){
     this.calendarOptions = {
       locale: esLocale,
-      // initialView: 'dayGridMonth',
-      initialView: 'timeGridDay',
-      
+      initialView: 'dayGridMonth',
       dropAccept: ".item-class",
       // allDaySlot: false,
       plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, bootstrapPlugin],
@@ -52,18 +55,11 @@ export class CalendarComponent implements OnInit, AfterViewInit{
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        // right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      // scrollTime: this.horaActual,
       nowIndicator:true,
       droppable: true,
       contentHeight:"70vh",
       editable: true,
-      events: [
-        { title: 'event 1', date: '2024-09-01' },
-        { title: 'event 2', date: '2024-09-11' }
-      ],
-      // eventDurationEditable: false,
       dragRevertDuration: 5,
       drop:(info:any) => {
         console.log(info);
@@ -74,7 +70,23 @@ export class CalendarComponent implements OnInit, AfterViewInit{
       eventClick:(info) => this.eventClick(info),
       dateClick:(info) => this.dateClick(info),
       eventDrop:(info) => this.eventDrop(info),
+      eventMouseEnter(arg) {
+        console.log(arg);
+        
+      },
       eventResize:(info) => this.eventResize(info),
+      viewDidMount:(info) => {
+
+        
+        
+      },
+      datesSet: (info) => {
+        this.dateStart = moment(info.view.currentStart).format('yyyy-MM-DD HH:mm:ss')
+        this.dateEnd = moment(info.view.currentEnd).format('yyyy-MM-DD HH:mm:ss')
+        this.getEvents()
+        this.crearHorario()
+        
+      }
 
     }
   }
@@ -82,6 +94,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
 
     this.getEvents()
+    this.getEventsWithOutDate()
     this.crearHorario()
 
     
@@ -106,38 +119,27 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
 
+  getEventsWithOutDate(){
+    this.eventService.getByParams({"date":"no"}).subscribe(res => {
+      console.log(res);
+      
+      this.eventsWithOutDate = this.formatEvents(res.data)
+    })
+
+  }
 
 
 
   getEvents(){
-    this.eventService.getAll().pipe(
-      map((resp:any) => {
-
-        return resp.data.map((res:any) => {
-
-          let allDay = moment(res.dateStart).format("HH:MM:SS").startsWith("00:")
-          
-          
-          return {
-            "idEvent":res.idEvent,
-            "title":res.title,
-            "start":res.dateStart,
-            "end":res.dateEnd,
-            "allDay": allDay,
-            "extendedProps": res
-          }
-
-        })
-      })
-    ).
+    let obj = {
+      "dateStart": this.dateStart,
+      "dateEnd": this.dateEnd
+    }
+    this.eventService.getByParams(obj).
     subscribe(data => {
-      
       console.log(data);
-      this.eventsCalendar = data
-      this.calendarOptions.events = data
-      this.events = data.filter((e:any) => e.start == null)
-      console.log(this.events);
-      
+      // this.eventsCalendar = this.formatEvents(data)
+      this.calendarOptions.events = this.formatEvents(data.data)
       
     })
   }
@@ -151,14 +153,34 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   }
 
+  formatEvents(data:any){
+    return data.map((res:any) => {
+
+      let allDay = moment(res.dateStart).format("HH:MM:SS").startsWith("00:")
+      
+      
+      return {
+        "idEvent":res.idEvent,
+        "title":res.title,
+        "start":res.dateStart,
+        "end":res.dateEnd,
+        "allDay": allDay,
+        "extendedProps": res
+      }
+
+    })
+
+  }
+
   update(event:any){
     // console.log(event.event.start);
     // console.log(event.event.end);
     
     // let data = event.event.extendedProps
-    // // data.dateStart = moment(event.event.start).format("YYYY-MM-DD")
+    // data.dateStart = moment(event.event.start).format("YYYY-MM-DD")
     // console.log(data)
     this.eventService.put(event.idEvent, event).subscribe(data => {
+      
 
     })
   }
@@ -174,6 +196,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     console.log(data);
 
     this.update(data)
+    event.draggedEl.parentNode.removeChild(event.draggedEl);
     
     
 
@@ -223,6 +246,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     .afterClosed().subscribe(data => {
       if(data == 'creado'){
         this.getEvents()
+        this.getEventsWithOutDate()
       }
     });
   }

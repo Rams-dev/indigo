@@ -73,6 +73,15 @@ export class ModalEventComponent{
     
   }
 
+
+  actualizar(){
+    this.eventService.put(this.form.value.idEvent, this.form.value).subscribe(data => {
+      console.log(data);
+      this.dialogRef.close("creado")
+
+    })
+  }
+
   
 
 }
