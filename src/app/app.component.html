@@ -1,24 +1,27 @@
-<div class="wrapper {{asidebarService.static ? '' : 'sidebar_minimize'}} {{asidebarService.asidebarIsHovered ? 'sidebar_minimize_hover' : ''}}">
+@if(isLoged){
+<div
+  class="wrapper {{asidebarService.static ? '' : 'sidebar_minimize'}} {{asidebarService.asidebarIsHovered ? 'sidebar_minimize_hover' : ''}}">
   <app-asidebar></app-asidebar>
   <div class="main-panel">
     <app-navbar></app-navbar>
     <div class="container">
-    <div class="page-inner py-0">
-      <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2">
-        <div>
-          <h3 class="fw-bold">Titulo</h3>
-          <h6 class="op-7 "></h6>
+      <div class="page-inner py-0">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2">
+          <div>
+            <h3 class="fw-bold">Titulo</h3>
+            <h6 class="op-7 "></h6>
+          </div>
+
         </div>
-        
-        <!-- <app-alert></app-alert> -->
+      </div>
+      <div class="container-fluid bg-white py-5">
+        <router-outlet></router-outlet>
 
       </div>
     </div>
-    <div class="container-fluid bg-white py-5">
-      <router-outlet></router-outlet>
-
-
-    </div>
-    </div>
     <app-footer> </app-footer>
+  </div>
 </div>
+  } @else {
+  <app-login></app-login>
+  }

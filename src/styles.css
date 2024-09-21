@@ -6,6 +6,22 @@
   inset: 0px 0% -21px 25%!important;
 }
 
+.dc-text-field--filled{
+  background: transparent;
+}
+
+.logincontent{
+  background-image: url('assets/imagenes/logo.png');
+  background-repeat: no-repeat;
+  /* background-position-x: -100%; */
+  background-color: #cea839;
+
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent!important;
+}
+
 .gg-check {
     box-sizing: border-box;
     position: relative;
