@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField, MatFormFieldControl, MatFormFieldModule, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../components/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,9 @@ export class LoginComponent implements OnInit{
 
   form:FormGroup
 
-  constructor(){
+  constructor(
+    private authService: AuthService
+  ){
 
   }
 
@@ -30,6 +33,15 @@ export class LoginComponent implements OnInit{
   }
 
   login(){
+    this.authService.auth(this.form.value).subscribe(data => {
+      console.log(data);
+      let user = data.usuarioData
+      user.token = data.token
+      this.authService.setCurrenUser(user)
+      this.authService.currentUser$.next(user)
+      this.authService.currentUser = user
+      
+    })
     console.log(this.form.value);
     
   }
