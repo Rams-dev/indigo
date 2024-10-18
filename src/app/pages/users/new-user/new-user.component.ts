@@ -79,7 +79,11 @@ export class NewUserComponent implements OnInit{
 
   guardar(){
     this.formatfechas()
-    this.snack.openSnackBar("Usuario agregado")
+    this.userService.post(this.form.value).subscribe(data => {
+      this.form.reset()
+      this.snack.openSnackBar("Usuario agregado")
+      
+    })
     console.log(this.form.value);
     
 
@@ -93,7 +97,6 @@ export class NewUserComponent implements OnInit{
 
   actualizar(){
     this.formatfechas()
-    console.log(this.form.value);
     this.userService.put(this.form.value.idUsuario,this.form.value).subscribe(data => {
       this.getUser()
       this.snack.openSnackBar("Usuario Actualizado")

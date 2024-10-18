@@ -1,0 +1,31 @@
+
+
+<h2 mat-dialog-title>Delete all elements?</h2>
+<mat-dialog-content>
+
+    <form [formGroup]="form">
+
+        <mat-form-field class="col-12">
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field> 
+        
+
+        <mat-form-field class="col-12">
+            <mat-label>Descripción</mat-label>
+            <input matInput formControlName="description">
+          </mat-form-field>
+    </form>
+
+
+    <button mat-fab extended (click)="save()" >
+        agregar
+      </button>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cerrar</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+</mat-dialog-actions>
