@@ -1,19 +1,20 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import moment from 'moment';
 import { HolidayService } from '../holiday.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-form-new-holiday',
   standalone: true,
   imports: [MatDatepickerModule,MatFormFieldModule,MatInputModule,ReactiveFormsModule, MatDialogModule, MatNativeDateModule,
-     MatButtonModule, FormsModule],
+     MatButtonModule, FormsModule, CommonModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './form-new-holiday.component.html',
   styleUrl: './form-new-holiday.component.css',
@@ -25,17 +26,23 @@ export class FormNewHolidayComponent implements OnInit{
   private holidayService = inject(HolidayService)
 
   constructor(
-    private dialog: MatDialogRef<FormNewHolidayComponent>
+    private dialog: MatDialogRef<FormNewHolidayComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {data: any}
   ) { }
 
 
   ngOnInit(): void {
+
+    console.log(this.data);
     
 
     this.form = new FormGroup({
+      idHoliday: new FormControl(),
       date: new FormControl(),
       description: new FormControl('')
     })
+
+    this.form.patchValue(this.data)
   }
 
 
@@ -52,6 +59,17 @@ export class FormNewHolidayComponent implements OnInit{
     })
     
     
+  }
+
+
+  update(){
+    this.setDate()
+    
+    this.holidayService.put(this.form.value.idHoliday ,this.form.value).subscribe(data => {
+      if(data){
+        this.dialog.close('creado')
+      }
+    })
   }
 
 

@@ -19,7 +19,7 @@
 
 }@else {
 
-<h2 mat-dialog-title>{{form.get('idEvent')?.value ? 'Nueva tarea': 'Editar tarea' }} </h2>
+<h2 mat-dialog-title>{{(form.get('idEvent')?.value ) ? 'Editar tarea' : 'Nueva tarea' }} </h2>
 <mat-dialog-content>
     
 

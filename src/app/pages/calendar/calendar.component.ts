@@ -22,6 +22,7 @@ import { EventService } from '../events/event.service';
 import { map } from 'rxjs';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import moment from 'moment';
+import { HolidayService } from '../holidays/holiday.service';
 
 @Component({
   selector: 'app-calendar',
@@ -37,12 +38,13 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   eventsCalendar:any=[]
   events:any=[]
   eventsWithOutDate:any = []
-
+  holidays:any = []
   dateStart:any
   dateEnd:any
 
   constructor(
-    private eventService:EventService
+    private eventService:EventService,
+    private holidayService:HolidayService
   ){
     this.calendarOptions = {
       locale: esLocale,
@@ -84,6 +86,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
         this.dateStart = moment(info.view.currentStart).format('yyyy-MM-DD HH:mm:ss')
         this.dateEnd = moment(info.view.currentEnd).format('yyyy-MM-DD HH:mm:ss')
         this.getEvents()
+        this.getHolidays()
         this.crearHorario()
         
       }
@@ -92,18 +95,19 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
+    this.dateStart = moment(new Date()).format('YYYY-MM-01')
+    this.dateEnd = moment(new Date()).add(1, 'M').format('YYYY-MM-01')
 
     this.getEvents()
+    this.getHolidays()
     this.getEventsWithOutDate()
     this.crearHorario()
-
-    
     
   }
 
 
   crearHorario(){
-    console.log(this.eventsCalendar);
+    this.calendarOptions.events = this.events
     
     // this.calendarOptions.events = this.eventsCalendar
     // this.calendarOptions.
@@ -119,10 +123,45 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
 
+  getHolidays(){
+    let obj = {"dateStart": moment(this.dateStart).format("YYYY-MM-DD"),
+      "dateEnd": moment(this.dateEnd).format("YYYY-MM-DD")
+    }
+    this.holidayService.getByParams(obj).
+    pipe(map(response => {;
+      
+      
+      return response.data.map((res:any) => {
+        this.holidays.push(res.date)
+        
+        return {
+          // "idEvent":res.idHoliday,
+          "title":res.description,
+          "start":res.date,
+          "allDay": true,
+          "extendedProps": {...res, selectable:false},
+          "display":'background'
+        }
+      })
+    })).
+    subscribe(res => {
+      
+
+      this.events = [...this.events, ...res]
+
+      console.log("hokiday");
+      console.log(res);
+      console.log("events");
+      console.log(this.events);
+      this.calendarOptions.events = this.events
+    })
+
+
+  }
+
+
   getEventsWithOutDate(){
     this.eventService.getByParams({"date":"no"}).subscribe(res => {
-      console.log(res);
-      
       this.eventsWithOutDate = this.formatEvents(res.data)
     })
 
@@ -137,14 +176,18 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     }
     this.eventService.getByParams(obj).
     subscribe(data => {
-      console.log(data);
       // this.eventsCalendar = this.formatEvents(data)
-      this.calendarOptions.events = this.formatEvents(data.data)
+      this.events = this.formatEvents(data.data)
+      this.calendarOptions.events = this.events
+      // this.calendarOptions.events = this.formatEvents(data.data)
       
     })
   }
 
   eventClick(event:any){
+    console.log("eventClick");
+    console.log(event);
+    
 
     this.openModal(event.event.extendedProps, true)
     
@@ -165,7 +208,8 @@ export class CalendarComponent implements OnInit, AfterViewInit{
         "start":res.dateStart,
         "end":res.dateEnd,
         "allDay": allDay,
-        "extendedProps": res
+        "extendedProps": res,
+        "selectable":true
       }
 
     })
@@ -187,18 +231,25 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
 
   eventReceive(event:any){
+
+    let receiveDate = moment(event.event.start).format("YYYY-MM-DD");
+    
+    
+    
+    if(this.isHoliDay(receiveDate)){
+      event.revert()
+      return
+    }
+
     let data = {...event.event.extendedProps}
     
     if(event.event.end){
       data.dateEnd = this.parseFecha(event.event.end)
     }
     data.dateStart =this.parseFecha(event.event.start)
-    console.log(data);
 
     this.update(data)
     event.draggedEl.parentNode.removeChild(event.draggedEl);
-    
-    
 
   }
 
@@ -209,11 +260,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
 
   eventResize(event:any){
-
-    
     let data = {...event.event.extendedProps}
-    console.log(this.parseFecha(event.event.end));
-    
     data.dateEnd = this.parseFecha(event.event.end)
     data.dateStart =this.parseFecha(event.event.start)
     
@@ -222,10 +269,13 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
   eventDrop(event:any){
+    
+    if(this.isHoliDay(moment(event.event.start).format("YYYY-MM-DD"))) {
+      event.revert()
+      return 
+    }
 
     let data = {...event.event.extendedProps}
-    console.log(this.parseFecha(event.event.end));
-    
     data.dateEnd = this.parseFecha(event.event.end)
     data.dateStart =this.parseFecha(event.event.start)
     
@@ -233,15 +283,19 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     
   }
 
-  dateClick(event:any){
-    console.log(event);
+  dateClick(event:any){    
+    
+    
+    
+    if(this.isHoliDay(moment(event.dateStr).format("YYYY-MM-DD"))) return
     this.openModal(event)
-    
-    
-
   }
 
   openModal(data:any, mostrarinfo = false){
+    
+    
+    console.log(data);
+    
     const dialogRef = this.dialog.open(ModalEventComponent, {height:'auto', width:'50%', data:{data, mostrarinfo}, })
     .afterClosed().subscribe(data => {
       if(data == 'creado'){
@@ -249,6 +303,12 @@ export class CalendarComponent implements OnInit, AfterViewInit{
         this.getEventsWithOutDate()
       }
     });
+  }
+
+
+  isHoliDay(date:any){
+    return this.holidays.includes(date)
+
   }
 
 }

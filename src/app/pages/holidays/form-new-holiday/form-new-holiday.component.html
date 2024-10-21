@@ -1,6 +1,8 @@
 
 
-<h2 mat-dialog-title>Delete all elements?</h2>
+<h2 mat-dialog-title>
+  {{form.get('idHoliday')?.value ? 'Actualizar registro' : 'Nuevo registro'}}
+</h2>
 <mat-dialog-content>
 
     <form [formGroup]="form">
@@ -19,13 +21,10 @@
             <input matInput formControlName="description">
           </mat-form-field>
     </form>
-
-
-    <button mat-fab extended (click)="save()" >
-        agregar
-      </button>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cerrar</button>
+  <button mat-button *ngIf="!form.get('idHoliday')?.value" (click)="save()" >Guardar</button>
+  <button mat-button *ngIf="form.get('idHoliday')?.value" (click)="update()">Actualizar</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
 </mat-dialog-actions>

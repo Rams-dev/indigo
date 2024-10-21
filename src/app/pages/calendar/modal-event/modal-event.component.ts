@@ -46,8 +46,8 @@ export class ModalEventComponent{
 
     }
 
-    
-    
+      
+      
     this.form = new FormGroup({
       idEvent: new FormControl(''),
       title: new FormControl('', Validators.required),
