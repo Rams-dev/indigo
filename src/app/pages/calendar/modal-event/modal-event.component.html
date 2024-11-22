@@ -1,56 +1,73 @@
 @if(mostrarInfo){
-              
-        <mat-dialog-content class="mat-typography p-3 position-relative">
-            <div class="position-absolute top-10 end-80">
-                <button class="btn btn-primary" (click)="mostrarInfo = false" >Actualizar</button>
-            </div>
-            <div class="mt-5">
-                <h4>{{info.title | uppercase}}</h4>
 
-            </div>
-            <hr>
-            <div class="col-12 p-3">
-                <div>
-                    <span>{{info.description}}</span>
-                </div>
-            </div>
-        </mat-dialog-content>
-    
+@if(esFestivo){
+
+<mat-dialog-content class="mat-typography p-3 position-relative">
+    <div class="col-12 p-3">
+    <div>
+      <span class="badge bg-success mb-2">{{info.date}}</span> <span class="ms-2">Dia festivo</span>
+      <h3>{{info.description | uppercase}}</h3>
+    </div>
+  </div>
+</mat-dialog-content>
+
+}@else {
+  <mat-dialog-content class="mat-typography p-3 position-relative">
+    <div class="position-absolute top-10 end-80">
+      <button class="btn btn-primary" (click)="mostrarInfo = false">Actualizar</button>
+    </div>
+    <div class="mt-5">
+      <h4>{{info.title | uppercase}}</h4>
+  
+    </div>
+    <hr>
+    <div class="col-12 p-3">
+      <div>
+        <span>{{info.description}}</span>
+      </div>
+    </div>
+  </mat-dialog-content>
+}
+
+
 
 }@else {
 
 <h2 mat-dialog-title>{{(form.get('idEvent')?.value ) ? 'Editar tarea' : 'Nueva tarea' }} </h2>
 <mat-dialog-content>
-    
 
-<form class="col-md-12" [formGroup]="form" autocomplete="off">   
+
+  <form class="col-md-12" [formGroup]="form" autocomplete="off">
     <div class="row">
-    
+
       <mat-form-field class="col-12 ">
         <mat-label>Titulo</mat-label>
-        <input matInput formControlName="title" name="title" #title  [required]="!form.get('title')?.value">
+        <input matInput formControlName="title" name="title" #title [required]="!form.get('title')?.value">
         <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
         <!-- {{form.errors?.['required'] | json}} -->
-      </mat-form-field>  
+      </mat-form-field>
 
 
       <mat-form-field class="col-12 ">
         <mat-label>Descripción</mat-label>
-        <input matInput formControlName="description" name="description" #description  [required]="!form.get('description')?.value">
+        <input matInput formControlName="description" name="description" #description
+          [required]="!form.get('description')?.value">
         <mat-hint *ngIf="form.errors?.['required']">Campo obligatorio *</mat-hint>
         <!-- {{form.errors?.['required'] | json}} -->
-      </mat-form-field>  
+      </mat-form-field>
 
-      <div class="col-12 mt-2">  
+      <div class="col-12 mt-2">
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary m-1" (click)="save()" *ngIf="!form.get('idEvent')?.value" [disabled]="!form.valid">Guardar</button>
-            <button class="btn btn-success m-1" (click)="actualizar()" *ngIf="form.get('idEvent')?.value" [disabled]="!form.valid">Actualizar</button>
+          <button class="btn btn-primary m-1" (click)="save()" *ngIf="!form.get('idEvent')?.value"
+            [disabled]="!form.valid">Guardar</button>
+          <button class="btn btn-success m-1" (click)="actualizar()" *ngIf="form.get('idEvent')?.value"
+            [disabled]="!form.valid">Actualizar</button>
 
         </div>
 
       </div>
     </div>
-</form>
+  </form>
 </mat-dialog-content>
 
 }
