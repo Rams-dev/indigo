@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField, MatFormFieldControl, MatFormFieldModule, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../components/auth.service';
+import { AlertService } from '../../components/alert/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,8 @@ import { AuthService } from '../../components/auth.service';
 export class LoginComponent implements OnInit{
 
   form:FormGroup
+
+  private alertService = inject(AlertService)
 
   constructor(
     private authService: AuthService
@@ -33,7 +36,9 @@ export class LoginComponent implements OnInit{
   }
 
   login(){
-    this.authService.auth(this.form.value).subscribe(data => {
+    this.authService.auth(this.form.value).subscribe(
+      { 
+        next: data => {
       console.log(data);
       let user = data.usuarioData
       user.token = data.token
@@ -41,7 +46,19 @@ export class LoginComponent implements OnInit{
       this.authService.currentUser$.next(user)
       this.authService.currentUser = user
       
-    })
+    },
+      error: (error) =>{
+        console.log(error);
+        if(error.status == 400){
+          this.alertService.openSnackBar(error.error.message)
+
+          
+          
+        }
+          
+          
+        
+      }})
     console.log(this.form.value);
     
   }

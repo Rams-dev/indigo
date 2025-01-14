@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsidebarComponent } from './template/asidebar/asidebar.component';
 import { FooterComponent } from './template/footer/footer.component';
 import { NavbarComponent } from './template/navbar/navbar.component';
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit{
   constructor(
     public asidebarService:AsidebarService,
     public authService:AuthService,
+    public router:Router,
 
   ){
 
@@ -35,8 +36,11 @@ export class AppComponent implements OnInit{
     })
 
     this.authService.currentUser$.subscribe(data => {
+      console.log(data);
+      
       if (data != null){
         this.isLoged = true
+        this.router.navigate(["/calendar"])
       }
     })
 
