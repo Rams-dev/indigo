@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsidebarComponent } from './template/asidebar/asidebar.component';
 import { FooterComponent } from './template/footer/footer.component';
@@ -8,6 +8,7 @@ import { AsidebarService } from './template/asidebar/asidebar.service';
 import { AlertComponent } from "./components/alert/alert.component";
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './components/auth.service';
+import { MenuService } from './services/menu.service';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +25,21 @@ export class AppComponent implements OnInit{
   constructor(
     public asidebarService:AsidebarService,
     public authService:AuthService,
+    public menuService:MenuService,
     public router:Router,
 
   ){
 
   }
 
-  ngOnInit(): void {
+
+  currentTitle = computed(() => {
+    return this.menuService.currentNavigation().label
+    
+  })
+
+  ngOnInit(): void {   
+    
     this.asidebarService.static$.subscribe(data => {
       this.static = data
     })
@@ -41,15 +50,14 @@ export class AppComponent implements OnInit{
       if (data != null){
         this.isLoged = true
         this.router.navigate(["/calendar"])
+        return
       }
+
+      this.isLoged = false
+
     })
 
   }
 
 
-
-
-  
-
-  title = 'front';
 }

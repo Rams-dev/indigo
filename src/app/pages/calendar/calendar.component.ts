@@ -269,7 +269,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     this.openModal(event)
   }
 
-  openModal(data:any, mostrarinfo = false){
+  openModal(data:any = {}, mostrarinfo = false){
     
     const dialogRef = this.dialog.open(ModalEventComponent, {height:'auto', width:'50%', data:{data, mostrarinfo}, })
     .afterClosed().subscribe(data => {

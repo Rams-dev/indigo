@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { AsidebarService } from './asidebar.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-asidebar',
@@ -10,15 +11,35 @@ import { CommonModule } from '@angular/common';
   templateUrl: './asidebar.component.html',
   styleUrl: './asidebar.component.css'
 })
-export class AsidebarComponent {
+export class AsidebarComponent implements OnInit{
 
-  
+  public asidebarService = inject(AsidebarService)
+  public menuService = inject(MenuService)
+  menus:any = []
 
-  constructor( 
-    public asidebarService: AsidebarService
-  ){
+  constructor( ){ }
 
+
+  idMenuSelected = computed(() => {
+    console.log(this.menuService.currentNavigation());
+    
+    return this.menuService.currentNavigation().idMenu
+
+  })
+
+  ngOnInit(): void {
+    this.menus = this.menuService.getMenu()
   }
+
+
+  setNavigation(menu:any){
+    this.menuService.setNavigation(menu)
+    
+  }
+
+
+
+
   toggleBottonSideBar(){
     this.asidebarService.static = !this.asidebarService.static
     // this.asidebarService.static$ = false

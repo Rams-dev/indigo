@@ -47,7 +47,7 @@ export class AuthService extends HttpService{
     localStorage.removeItem('currentUser')
     this.currentUser$.next(null)
     this.currentUser = null
-    this.router.navigate(['/'])
+    this.router.navigate(['/login'])
   }
 
 
