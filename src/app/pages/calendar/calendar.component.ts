@@ -104,7 +104,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     this.dateStart = moment(new Date()).format('YYYY-MM-01')
     this.dateEnd = moment(new Date()).add(1, 'M').format('YYYY-MM-01')
-    this.init()
+    // this.init()
   }
 
 
